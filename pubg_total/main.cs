@@ -1,6 +1,4 @@
-﻿#define DEBUG
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
@@ -35,7 +33,8 @@ namespace pubg_total
 
         private void main_Load(object sender, EventArgs e)
         {
-            infiniteScreenCaptrue();
+            Thread thread = new Thread(() => infiniteScreenCaptrue());
+            thread.Start();
         }
 
         private Mat bitmap2Mat(Bitmap bitmap)
@@ -90,12 +89,6 @@ namespace pubg_total
                     }
                 }
             }
-
-            else
-            {
-                textBoxStr += nickname + " total : \n\n NAN";
-                textBox.AppendText(textBoxStr);
-            }
         }
 
         private void infiniteScreenCaptrue()
@@ -122,7 +115,7 @@ namespace pubg_total
                 }
 
                 Cv2.Resize(bitmap2Mat(bitmap), dst, new OpenCvSharp.Size(320, 120));
-                //Cv2.ImShow("test", bitmap2Mat(bitmap));
+                Cv2.ImShow("test", bitmap2Mat(bitmap));
                 Cv2.WaitKey(10);
                 Pix pix = PixConverter.ToPix(mat2Bitmap(dst));
                 var engine = new TesseractEngine(@"./tessdata", "eng", EngineMode.Default);
